@@ -727,78 +727,137 @@ function loginWithTelegram() {
   showToast('Перейдіть в Telegram для авторизації', 'info');
 }
 
-function loginWithGoogle() {
-  // Simulated Google login for static site
-  // In production, use Firebase Auth or similar
-  const mockUser = {
-    id: 'google_' + Date.now(),
-    name: 'Google User',
-    email: 'user@gmail.com',
-    provider: 'google',
-    bonuses: 50,
-    orders: [],
-    createdAt: new Date().toISOString()
-  };
+async function loginWithGoogle() {
+  // Real Google login with Firebase
+  if (!window.firebaseAuth || !window.googleProvider) {
+    showToast('Firebase не завантажено. Спробуйте пізніше.', 'error');
+    return;
+  }
 
-  currentUser = mockUser;
-  saveUser();
-  closeLoginModal();
-  showToast('Вітаємо! Ви отримали 50 бонусів! 🎁');
+  try {
+    const result = await window.firebaseSignInWithPopup(window.firebaseAuth, window.googleProvider);
+    const user = result.user;
+
+    // Check if user exists in Firestore
+    const userRef = window.firestoreDoc(window.firebaseDb, 'users', user.uid);
+    const userSnap = await window.firestoreGetDoc(userRef);
+
+    if (userSnap.exists()) {
+      currentUser = userSnap.data();
+    } else {
+      // Create new user in Firestore
+      currentUser = {
+        id: user.uid,
+        name: user.displayName || 'Користувач',
+        email: user.email,
+        photo: user.photoURL,
+        provider: 'google',
+        bonuses: 50,
+        orders: [],
+        createdAt: new Date().toISOString()
+      };
+      await window.firestoreSetDoc(userRef, currentUser);
+      showToast('Вітаємо! Ви отримали 50 бонусів! 🎁');
+    }
+
+    saveUser();
+    closeLoginModal();
+    showToast('Успішний вхід через Google! 🎉');
+  } catch (error) {
+    console.error('Google login error:', error);
+    showToast('Помилка входу: ' + error.message, 'error');
+  }
 }
 
-function loginWithEmail(event) {
+async function loginWithEmail(event) {
   event.preventDefault();
   const email = $('#loginEmail').value;
   const password = $('#loginPassword').value;
 
-  // Check stored users
-  const users = JSON.parse(localStorage.getItem('jahcloud_users')) || {};
-  const user = users[email];
+  if (!window.firebaseAuth) {
+    showToast('Firebase не завантажено', 'error');
+    return;
+  }
 
-  if (user && user.password === password) {
-    currentUser = user;
+  try {
+    const result = await window.firebaseSignInWithEmailAndPassword(window.firebaseAuth, email, password);
+    const user = result.user;
+
+    // Get user data from Firestore
+    const userRef = window.firestoreDoc(window.firebaseDb, 'users', user.uid);
+    const userSnap = await window.firestoreGetDoc(userRef);
+
+    if (userSnap.exists()) {
+      currentUser = userSnap.data();
+    } else {
+      currentUser = {
+        id: user.uid,
+        email: user.email,
+        provider: 'email',
+        bonuses: 0,
+        orders: [],
+        createdAt: new Date().toISOString()
+      };
+    }
+
     saveUser();
     closeLoginModal();
     showToast('Вітаємо назад! 👋');
-  } else {
-    showToast('Невірний email або пароль', 'error');
+  } catch (error) {
+    console.error('Email login error:', error);
+    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+      showToast('Невірний email або пароль', 'error');
+    } else {
+      showToast('Помилка входу: ' + error.message, 'error');
+    }
   }
 }
 
-function registerWithEmail(event) {
+async function registerWithEmail(event) {
   event.preventDefault();
   const name = $('#registerName').value;
   const email = $('#registerEmail').value;
   const phone = $('#registerPhone').value;
   const password = $('#registerPassword').value;
 
-  // Check if user exists
-  const users = JSON.parse(localStorage.getItem('jahcloud_users')) || {};
-  if (users[email]) {
-    showToast('Користувач з таким email вже існує', 'error');
+  if (!window.firebaseAuth) {
+    showToast('Firebase не завантажено', 'error');
     return;
   }
 
-  // Create new user
-  const newUser = {
-    id: 'email_' + Date.now(),
-    name,
-    email,
-    phone,
-    password,
-    provider: 'email',
-    bonuses: 50,
-    orders: [],
-    createdAt: new Date().toISOString()
-  };
+  try {
+    const result = await window.firebaseCreateUserWithEmailAndPassword(window.firebaseAuth, email, password);
+    const user = result.user;
 
-  users[email] = newUser;
-  localStorage.setItem('jahcloud_users', JSON.stringify(users));
+    // Create user in Firestore
+    const newUser = {
+      id: user.uid,
+      name,
+      email,
+      phone,
+      provider: 'email',
+      bonuses: 50,
+      orders: [],
+      createdAt: new Date().toISOString()
+    };
 
-  currentUser = newUser;
-  saveUser();
-  closeLoginModal();
-  showToast('Реєстрація успішна! +50 бонусів 🎁');
+    const userRef = window.firestoreDoc(window.firebaseDb, 'users', user.uid);
+    await window.firestoreSetDoc(userRef, newUser);
+
+    currentUser = newUser;
+    saveUser();
+    closeLoginModal();
+    showToast('Реєстрація успішна! +50 бонусів 🎁');
+  } catch (error) {
+    console.error('Registration error:', error);
+    if (error.code === 'auth/email-already-in-use') {
+      showToast('Цей email вже зареєстрований', 'error');
+    } else if (error.code === 'auth/weak-password') {
+      showToast('Пароль занадто слабкий (мін. 6 символів)', 'error');
+    } else {
+      showToast('Помилка реєстрації: ' + error.message, 'error');
+    }
+  }
 }
 
 function saveUser() {
@@ -806,7 +865,14 @@ function saveUser() {
   updateUserUI();
 }
 
-function logout() {
+async function logout() {
+  try {
+    if (window.firebaseAuth) {
+      await window.firebaseSignOut(window.firebaseAuth);
+    }
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
   currentUser = null;
   localStorage.removeItem('jahcloud_user');
   updateUserUI();
