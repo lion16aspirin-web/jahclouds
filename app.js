@@ -1016,20 +1016,48 @@ function initTelegramWebApp() {
     // Enable closing confirmation
     tg.enableClosingConfirmation();
 
-    // Auto-login from Telegram
+    // Auto-login from Telegram - ALWAYS login when in Mini App
     const tgUser = tg.initDataUnsafe?.user;
-    if (tgUser && !currentUser) {
-      currentUser = {
-        id: tgUser.id,
+    if (tgUser) {
+      const userData = {
+        id: `tg_${tgUser.id}`,
+        telegramId: tgUser.id,
         name: tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : ''),
-        username: tgUser.username,
-        photo: tgUser.photo_url,
+        username: tgUser.username || '',
+        photo: tgUser.photo_url || '',
         provider: 'telegram',
         bonuses: parseInt(localStorage.getItem('bonuses')) || 50,
         orders: [],
         createdAt: new Date().toISOString()
       };
+
+      currentUser = userData;
       saveUser();
+
+      // Save to Firebase
+      if (window.firebaseDb && window.firestoreDoc && window.firestoreSetDoc) {
+        const userRef = window.firestoreDoc(window.firebaseDb, 'users', `tg_${tgUser.id}`);
+        window.firestoreSetDoc(userRef, userData, { merge: true })
+          .then(() => {
+            console.log('Telegram user synced with Firebase');
+            // Show welcome if first time
+            if (!localStorage.getItem('tg_welcomed')) {
+              localStorage.setItem('tg_welcomed', 'true');
+              showToast(`Вітаємо, ${tgUser.first_name}! 🎉`);
+            }
+          })
+          .catch(err => console.error('Firebase sync error:', err));
+      } else {
+        // Firebase not ready yet, try again
+        setTimeout(() => {
+          if (window.firebaseDb) {
+            const userRef = window.firestoreDoc(window.firebaseDb, 'users', `tg_${tgUser.id}`);
+            window.firestoreSetDoc(userRef, userData, { merge: true });
+          }
+        }, 2000);
+      }
+
+      updateUserUI();
     }
 
     // Set main button for checkout
