@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="JahCloud — інтернет-магазин HHC одноразок. Якісні вейпи з доставкою по Україні. Оплата через Telegram Stars.">
+    <meta name="keywords" content="HHC, вейп, одноразки, електронні сигарети, купити вейп, Україна">
+    <title>JahCloud ☁️ — HHC Одноразки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader">
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+        </div>
+        <span class="loader-text">JahCloud</span>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <a href="#home" class="logo" data-nav="home">
+                <span class="logo-icon">☁️</span>
+                <span class="logo-text">Jah<span class="accent">Cloud</span></span>
+            </a>
+
+            <nav class="nav" id="nav">
+                <a href="#home" class="nav-link active" data-nav="home">Головна</a>
+                <a href="#catalog" class="nav-link" data-nav="catalog">Каталог</a>
+                <a href="#blog" class="nav-link" data-nav="blog">Блог</a>
+                <a href="#faq" class="nav-link" data-nav="faq">FAQ</a>
+                <a href="#contacts" class="nav-link" data-nav="contacts">Контакти</a>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Перемикач теми">
+                    <span class="theme-icon sun">☀️</span>
+                    <span class="theme-icon moon">🌙</span>
+                </button>
+
+                <button class="search-btn" id="searchBtn" aria-label="Пошук">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="M21 21l-4.35-4.35" />
+                    </svg>
+                </button>
+
+                <button class="cart-btn" id="cartBtn" aria-label="Кошик">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 6h15l-1.5 9h-12z" />
+                        <circle cx="9" cy="20" r="1" />
+                        <circle cx="18" cy="20" r="1" />
+                        <path d="M6 6L5 3H2" />
+                    </svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+
+                <button class="user-btn" id="userBtn" aria-label="Кабінет">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+                    </svg>
+                </button>
+
+                <button class="menu-toggle" id="menuToggle" aria-label="Меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main" id="main">
+
+        <!-- Home Page -->
+        <section class="page page-home active" id="home">
+            <!-- Hero -->
+            <div class="hero">
+                <div class="hero-bg">
+                    <div class="hero-gradient"></div>
+                    <div class="floating-elements">
+                        <span class="float-el">🌿</span>
+                        <span class="float-el">☁️</span>
+                        <span class="float-el">🔥</span>
+                        <span class="float-el">✨</span>
+                        <span class="float-el">🌿</span>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="hero-content">
+                        <span class="hero-badge">🔥 Новинки в наявності</span>
+                        <h1 class="hero-title">
+                            Відчуй <span class="gradient-text">справжній</span> вайб
+                        </h1>
+                        <p class="hero-text">
+                            Преміум HHC одноразки з яскравими смаками.
+                            Безкоштовна доставка від 1000₴. Оплата через Telegram Stars ⭐
+                        </p>
+                        <div class="hero-actions">
+                            <a href="#catalog" class="btn btn-primary btn-lg" data-nav="catalog">
+                                <span>Перейти до каталогу</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                            <a href="#about" class="btn btn-outline btn-lg">
+                                <span>Дізнатися більше</span>
+                            </a>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat">
+                                <span class="stat-value">5000+</span>
+                                <span class="stat-label">Задоволених клієнтів</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">50+</span>
+                                <span class="stat-label">Смаків</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">24/7</span>
+                                <span class="stat-label">Підтримка</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="hero-product">
+                            <div class="product-glow"></div>
+                            <img src="assets/hero-vape.png" alt="HHC Vape" class="hero-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="features" id="about">
+                <div class="container">
+                    <div class="section-header">
+                        <span class="section-badge">Чому ми?</span>
+                        <h2 class="section-title">Переваги <span class="accent">JahCloud</span></h2>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🌿</div>
+                            <h3>Преміум якість</h3>
+                            <p>Тільки сертифіковані HHC продукти від перевірених виробників</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <h3>Швидка доставка</h3>
+                            <p>Відправка в день замовлення. Доставка по Україні 1-3 дні</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⭐</div>
+                            <h3>Telegram Stars</h3>
+                            <p>Зручна та безпечна оплата через Telegram</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎁</div>
+                            <h3>Бонусна програма</h3>
+                            <p>5% кешбек з кожної покупки на бонусний рахунок</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💬</div>
+                            <h3>Підтримка 24/7</h3>
+                            <p>Наша команда завжди готова допомогти в Telegram</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔒</div>
+                            <h3>Конфіденційність</h3>
+                            <p>Анонімна упаковка. Ваші дані під захистом</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Products -->
+            <div class="popular-products">
+                <div class="container">
+                    <div class="section-header">
+                        <span class="section-badge">🔥 Хіти продажів</span>
+                        <h2 class="section-title">Популярні <span class="accent">товари</span></h2>
+                        <a href="#catalog" class="section-link" data-nav="catalog">
+                            Дивитись всі
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="products-slider" id="popularProducts">
+                        <!-- Products will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="testimonials">
+                <div class="container">
+                    <div class="section-header">
+                        <span class="section-badge">💬 Відгуки</span>
+                        <h2 class="section-title">Що кажуть <span class="accent">клієнти</span></h2>
+                    </div>
+                    <div class="testimonials-grid" id="testimonials">
+                        <!-- Testimonials will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-section">
+                <div class="container">
+                    <div class="cta-card">
+                        <div class="cta-content">
+                            <h2>Отримай <span class="gradient-text">10% знижки</span></h2>
+                            <p>Підпишись на наш Telegram канал та отримай промокод на першу покупку!</p>
+                            <a href="https://t.me/jahcloud" class="btn btn-primary btn-lg" target="_blank">
+                                <span>Підписатись</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="cta-visual">
+                            <span class="cta-emoji">🎉</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Catalog Page -->
+        <section class="page page-catalog" id="catalog">
+            <div class="container">
+                <div class="catalog-header">
+                    <h1 class="page-title">Каталог</h1>
+                    <p class="page-subtitle">Обирай свій ідеальний смак</p>
+                </div>
+
+                <div class="catalog-layout">
+                    <!-- Filters Sidebar -->
+                    <aside class="filters-sidebar" id="filtersSidebar">
+                        <div class="filters-header">
+                            <h3>Фільтри</h3>
+                            <button class="filters-reset" id="filtersReset">Скинути</button>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4 class="filter-title">Категорія</h4>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="disposable" checked>
+                                    <span class="checkmark"></span>
+                                    <span>Одноразки</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="accessories">
+                                    <span class="checkmark"></span>
+                                    <span>Аксесуари</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="sets">
+                                    <span class="checkmark"></span>
+                                    <span>Набори</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4 class="filter-title">Ціна</h4>
+                            <div class="price-range">
+                                <input type="range" min="0" max="2000" value="2000" class="range-slider"
+                                    id="priceRange">
+                                <div class="price-inputs">
+                                    <input type="number" placeholder="Від" class="price-input" id="priceMin">
+                                    <span>—</span>
+                                    <input type="number" placeholder="До" class="price-input" id="priceMax">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4 class="filter-title">Смак</h4>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="flavor" value="fruity">
+                                    <span class="checkmark"></span>
+                                    <span>🍓 Фруктові</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="flavor" value="menthol">
+                                    <span class="checkmark"></span>
+                                    <span>❄️ Ментолові</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="flavor" value="dessert">
+                                    <span class="checkmark"></span>
+                                    <span>🍰 Десертні</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="flavor" value="tobacco">
+                                    <span class="checkmark"></span>
+                                    <span>🍂 Тютюнові</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4 class="filter-title">Міцність</h4>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="strength" value="light">
+                                    <span class="checkmark"></span>
+                                    <span>Легкі</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="strength" value="medium">
+                                    <span class="checkmark"></span>
+                                    <span>Середні</span>
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="strength" value="strong">
+                                    <span class="checkmark"></span>
+                                    <span>Міцні</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-block" id="applyFilters">
+                            Застосувати
+                        </button>
+                    </aside>
+
+                    <!-- Products Grid -->
+                    <div class="catalog-main">
+                        <div class="catalog-toolbar">
+                            <button class="filters-toggle" id="filtersToggle">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M4 6h16M4 12h10M4 18h4" />
+                                </svg>
+                                Фільтри
+                            </button>
+                            <div class="catalog-search">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <path d="M21 21l-4.35-4.35" />
+                                </svg>
+                                <input type="text" placeholder="Пошук товарів..." id="catalogSearch">
+                            </div>
+                            <div class="catalog-sort">
+                                <select id="catalogSort">
+                                    <option value="popular">За популярністю</option>
+                                    <option value="price-asc">Ціна: низька → висока</option>
+                                    <option value="price-desc">Ціна: висока → низька</option>
+                                    <option value="new">Новинки</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="products-grid" id="productsGrid">
+                            <!-- Products will be loaded dynamically -->
+                        </div>
+
+                        <div class="catalog-pagination" id="pagination">
+                            <!-- Pagination will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Page -->
+        <section class="page page-product" id="product">
+            <div class="container">
+                <div class="breadcrumb" id="productBreadcrumb">
+                    <a href="#home" data-nav="home">Головна</a>
+                    <span>/</span>
+                    <a href="#catalog" data-nav="catalog">Каталог</a>
+                    <span>/</span>
+                    <span class="current" id="productBreadcrumbName">Товар</span>
+                </div>
+
+                <div class="product-layout" id="productContent">
+                    <!-- Product content will be loaded dynamically -->
+                </div>
+
+                <div class="related-products">
+                    <h2 class="section-title">Схожі <span class="accent">товари</span></h2>
+                    <div class="products-slider" id="relatedProducts">
+                        <!-- Related products will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Page -->
+        <section class="page page-cart" id="cart">
+            <div class="container">
+                <h1 class="page-title">Кошик</h1>
+
+                <div class="cart-layout">
+                    <div class="cart-items" id="cartItems">
+                        <!-- Cart items will be loaded dynamically -->
+                    </div>
+
+                    <div class="cart-summary" id="cartSummary">
+                        <h3>Ваше замовлення</h3>
+                        <div class="summary-row">
+                            <span>Товари (<span id="cartItemsCount">0</span>)</span>
+                            <span id="cartSubtotal">0 ₴</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Знижка</span>
+                            <span class="discount" id="cartDiscount">0 ₴</span>
+                        </div>
+                        <div class="promo-input">
+                            <input type="text" placeholder="Промокод" id="promoInput">
+                            <button class="btn btn-outline" id="applyPromo">OK</button>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row total">
+                            <span>Разом</span>
+                            <span id="cartTotal">0 ₴</span>
+                        </div>
+                        <div class="bonus-info">
+                            <span class="bonus-icon">🎁</span>
+                            <span>Ви отримаєте <strong id="bonusEarned">0</strong> бонусів</span>
+                        </div>
+                        <button class="btn btn-primary btn-lg btn-block" id="checkoutBtn">
+                            Оформити замовлення
+                        </button>
+                    </div>
+                </div>
+
+                <div class="cart-empty" id="cartEmpty" style="display: none;">
+                    <span class="cart-empty-icon">🛒</span>
+                    <h2>Кошик порожній</h2>
+                    <p>Додайте товари з каталогу</p>
+                    <a href="#catalog" class="btn btn-primary" data-nav="catalog">До каталогу</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout Page -->
+        <section class="page page-checkout" id="checkout">
+            <div class="container">
+                <h1 class="page-title">Оформлення замовлення</h1>
+
+                <div class="checkout-layout">
+                    <form class="checkout-form" id="checkoutForm">
+                        <div class="form-section">
+                            <h3>Контактні дані</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customerName">Ім'я *</label>
+                                    <input type="text" id="customerName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="customerPhone">Телефон *</label>
+                                    <input type="tel" id="customerPhone" required placeholder="+380">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerTelegram">Telegram нікнейм</label>
+                                <input type="text" id="customerTelegram" placeholder="@username">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Доставка</h3>
+                            <div class="delivery-options">
+                                <label class="delivery-option">
+                                    <input type="radio" name="delivery" value="nova" checked>
+                                    <div class="option-content">
+                                        <span class="option-icon">📦</span>
+                                        <div class="option-info">
+                                            <strong>Нова Пошта</strong>
+                                            <span>1-3 дні</span>
+                                        </div>
+                                        <span class="option-price">За тарифами НП</span>
+                                    </div>
+                                </label>
+                                <label class="delivery-option">
+                                    <input type="radio" name="delivery" value="ukrposhta">
+                                    <div class="option-content">
+                                        <span class="option-icon">✉️</span>
+                                        <div class="option-info">
+                                            <strong>Укрпошта</strong>
+                                            <span>3-7 днів</span>
+                                        </div>
+                                        <span class="option-price">Від 30 ₴</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryCity">Місто *</label>
+                                <input type="text" id="deliveryCity" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryAddress">Відділення / Адреса *</label>
+                                <input type="text" id="deliveryAddress" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Оплата</h3>
+                            <div class="payment-options">
+                                <label class="payment-option featured">
+                                    <input type="radio" name="payment" value="stars" checked>
+                                    <div class="option-content">
+                                        <span class="option-icon">⭐</span>
+                                        <div class="option-info">
+                                            <strong>Telegram Stars</strong>
+                                            <span>Миттєва оплата</span>
+                                        </div>
+                                        <span class="option-badge">Рекомендовано</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="orderComment">Коментар до замовлення</label>
+                            <textarea id="orderComment" rows="3" placeholder="Побажання до замовлення..."></textarea>
+                        </div>
+
+                        <div class="form-agreement">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span class="checkmark"></span>
+                                <span>Погоджуюсь з <a href="#privacy">політикою конфіденційності</a></span>
+                            </label>
+                        </div>
+                    </form>
+
+                    <div class="checkout-summary">
+                        <h3>Ваше замовлення</h3>
+                        <div class="checkout-items" id="checkoutItems">
+                            <!-- Items will be loaded dynamically -->
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row">
+                            <span>Товари</span>
+                            <span id="checkoutSubtotal">0 ₴</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Знижка</span>
+                            <span class="discount" id="checkoutDiscount">0 ₴</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>До оплати</span>
+                            <span id="checkoutTotal">0 ₴</span>
+                        </div>
+                        <div class="stars-equivalent">
+                            ≈ <span id="starsAmount">0</span> ⭐ Stars
+                        </div>
+                        <button type="submit" form="checkoutForm" class="btn btn-primary btn-lg btn-block">
+                            <span>Оплатити через Telegram</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Page -->
+        <section class="page page-account" id="account">
+            <div class="container">
+                <h1 class="page-title">Особистий кабінет</h1>
+
+                <div class="account-layout">
+                    <aside class="account-sidebar">
+                        <div class="account-user">
+                            <div class="user-avatar">
+                                <span>👤</span>
+                            </div>
+                            <div class="user-info">
+                                <h3 id="userName">Гість</h3>
+                                <p id="userPhone">+380...</p>
+                            </div>
+                        </div>
+                        <nav class="account-nav">
+                            <a href="#" class="account-link active" data-tab="orders">
+                                <span class="link-icon">📦</span>
+                                Мої замовлення
+                            </a>
+                            <a href="#" class="account-link" data-tab="bonuses">
+                                <span class="link-icon">🎁</span>
+                                Бонуси
+                                <span class="link-badge" id="bonusBalance">0</span>
+                            </a>
+                            <a href="#" class="account-link" data-tab="settings">
+                                <span class="link-icon">⚙️</span>
+                                Налаштування
+                            </a>
+                        </nav>
+                    </aside>
+
+                    <div class="account-content">
+                        <div class="account-tab active" id="tab-orders">
+                            <h2>Мої замовлення</h2>
+                            <div class="orders-list" id="ordersList">
+                                <div class="orders-empty">
+                                    <span>📭</span>
+                                    <p>У вас поки немає замовлень</p>
+                                    <a href="#catalog" class="btn btn-primary" data-nav="catalog">До каталогу</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="account-tab" id="tab-bonuses">
+                            <h2>Бонусна програма</h2>
+                            <div class="bonus-card">
+                                <div class="bonus-balance">
+                                    <span class="balance-label">Ваш баланс</span>
+                                    <span class="balance-value"><span id="bonusTotal">0</span> бонусів</span>
+                                </div>
+                                <p class="bonus-info-text">
+                                    1 бонус = 1 ₴. Отримуйте 5% кешбек з кожної покупки!
+                                </p>
+                            </div>
+                            <div class="bonus-history" id="bonusHistory">
+                                <h3>Історія</h3>
+                                <p class="empty-text">Історія бонусів порожня</p>
+                            </div>
+                        </div>
+
+                        <div class="account-tab" id="tab-settings">
+                            <h2>Налаштування</h2>
+                            <form class="settings-form" id="settingsForm">
+                                <div class="form-group">
+                                    <label>Ім'я</label>
+                                    <input type="text" id="settingsName">
+                                </div>
+                                <div class="form-group">
+                                    <label>Телефон</label>
+                                    <input type="tel" id="settingsPhone">
+                                </div>
+                                <div class="form-group">
+                                    <label>Telegram</label>
+                                    <input type="text" id="settingsTelegram">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Зберегти</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Page -->
+        <section class="page page-blog" id="blog">
+            <div class="container">
+                <div class="section-header">
+                    <h1 class="page-title">Блог</h1>
+                    <p class="page-subtitle">Новини, огляди та корисні статті</p>
+                </div>
+
+                <div class="blog-grid" id="blogGrid">
+                    <!-- Blog posts will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Page -->
+        <section class="page page-faq" id="faq">
+            <div class="container">
+                <div class="section-header">
+                    <h1 class="page-title">FAQ</h1>
+                    <p class="page-subtitle">Відповіді на часті питання</p>
+                </div>
+
+                <div class="faq-list" id="faqList">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Що таке HHC?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>HHC (гексагідроканабінол) — це напівсинтетичний канабіноїд, який виробляється з конопель.
+                                Він має м'який розслаблюючий ефект і є легальним в Україні.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Як оплатити замовлення?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Ми приймаємо оплату через Telegram Stars ⭐. Це зручний та безпечний спосіб оплати прямо в
+                                месенджері. Після оформлення замовлення вам надійде посилання для оплати.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Які терміни доставки?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Відправка здійснюється в день замовлення (до 15:00). Доставка Новою Поштою займає 1-3
+                                дні, Укрпоштою — 3-7 днів.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Чи є безкоштовна доставка?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Так! При замовленні від 1000 ₴ доставка Новою Поштою безкоштовна.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Як працює бонусна програма?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>З кожної покупки ви отримуєте 5% кешбек у вигляді бонусів. 1 бонус = 1 ₴. Бонуси можна
+                                використовувати для оплати наступних замовлень.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Чи є вікові обмеження?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Так, продаж здійснюється лише особам, які досягли 18 років.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contacts Page -->
+        <section class="page page-contacts" id="contacts">
+            <div class="container">
+                <div class="section-header">
+                    <h1 class="page-title">Контакти</h1>
+                    <p class="page-subtitle">Завжди на зв'язку</p>
+                </div>
+
+                <div class="contacts-grid">
+                    <div class="contact-card">
+                        <span class="contact-icon">💬</span>
+                        <h3>Telegram</h3>
+                        <p>Основний канал зв'язку</p>
+                        <a href="https://t.me/jahcloud_support" class="btn btn-outline"
+                            target="_blank">@jahcloud_support</a>
+                    </div>
+                    <div class="contact-card">
+                        <span class="contact-icon">📱</span>
+                        <h3>Телефон</h3>
+                        <p>Пн-Нд: 10:00 - 22:00</p>
+                        <a href="tel:+380000000000" class="btn btn-outline">+38 (000) 000-00-00</a>
+                    </div>
+                    <div class="contact-card">
+                        <span class="contact-icon">📧</span>
+                        <h3>Email</h3>
+                        <p>Для партнерства</p>
+                        <a href="mailto:info@jahcloud.ua" class="btn btn-outline">info@jahcloud.ua</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Search Modal -->
+    <div class="modal" id="searchModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content search-modal-content">
+            <div class="search-modal-header">
+                <div class="search-input-wrapper">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="M21 21l-4.35-4.35" />
+                    </svg>
+                    <input type="text" placeholder="Пошук товарів..." id="searchInput" autofocus>
+                </div>
+                <button class="modal-close" id="searchClose">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="search-results" id="searchResults">
+                <p class="search-hint">Почніть вводити назву товару...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="sidebar" id="cartSidebar">
+        <div class="sidebar-overlay"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h3>Кошик</h3>
+                <button class="sidebar-close" id="cartClose">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="sidebar-body" id="cartSidebarItems">
+                <!-- Cart items will be loaded dynamically -->
+            </div>
+            <div class="sidebar-footer">
+                <div class="sidebar-total">
+                    <span>Разом:</span>
+                    <span id="cartSidebarTotal">0 ₴</span>
+                </div>
+                <a href="#cart" class="btn btn-primary btn-block" data-nav="cart" id="goToCart">
+                    Перейти до кошика
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Telegram Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <button class="chat-toggle" id="chatToggle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
+            </svg>
+            <span class="chat-badge">1</span>
+        </button>
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-popup-header">
+                <span>💬 Підтримка</span>
+                <button class="chat-popup-close" id="chatPopupClose">×</button>
+            </div>
+            <div class="chat-popup-body">
+                <p>Привіт! 👋</p>
+                <p>Маєте питання? Напишіть нам у Telegram!</p>
+                <a href="https://t.me/jahcloud_support" class="btn btn-primary btn-block" target="_blank">
+                    Написати в Telegram
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#home" class="logo" data-nav="home">
+                        <span class="logo-icon">☁️</span>
+                        <span class="logo-text">Jah<span class="accent">Cloud</span></span>
+                    </a>
+                    <p>Преміум HHC одноразки з доставкою по Україні. Якість, яку ви заслуговуєте.</p>
+                    <div class="social-links">
+                        <a href="https://t.me/jahcloud" target="_blank" aria-label="Telegram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/jahcloud" target="_blank" aria-label="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Навігація</h4>
+                    <a href="#home" data-nav="home">Головна</a>
+                    <a href="#catalog" data-nav="catalog">Каталог</a>
+                    <a href="#blog" data-nav="blog">Блог</a>
+                    <a href="#faq" data-nav="faq">FAQ</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Інформація</h4>
+                    <a href="#faq" data-nav="faq">Доставка і оплата</a>
+                    <a href="#privacy">Політика конфіденційності</a>
+                    <a href="#terms">Умови використання</a>
+                    <a href="#contacts" data-nav="contacts">Контакти</a>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Контакти</h4>
+                    <a href="https://t.me/jahcloud_support" target="_blank">💬 Telegram підтримка</a>
+                    <a href="tel:+380000000000">📱 +38 (000) 000-00-00</a>
+                    <a href="mailto:info@jahcloud.ua">📧 info@jahcloud.ua</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 JahCloud. Всі права захищені.</p>
+                <p class="age-restriction">🔞 Тільки для осіб 18+</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
