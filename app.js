@@ -748,27 +748,40 @@ function loginWithTelegram() {
   if (window.Telegram?.WebApp) {
     const tgUser = window.Telegram.WebApp.initDataUnsafe?.user;
     if (tgUser) {
-      currentUser = {
-        id: tgUser.id,
+      // Save to Firebase as well
+      const userData = {
+        id: `tg_${tgUser.id}`,
+        telegramId: tgUser.id,
         name: tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : ''),
-        username: tgUser.username,
-        photo: tgUser.photo_url,
+        username: tgUser.username || '',
+        photo: tgUser.photo_url || '',
         provider: 'telegram',
         bonuses: 50,
         orders: [],
         createdAt: new Date().toISOString()
       };
+
+      // Save to Firestore
+      if (window.firebaseDb && window.firestoreDoc && window.firestoreSetDoc) {
+        const userRef = window.firestoreDoc(window.firebaseDb, 'users', `tg_${tgUser.id}`);
+        window.firestoreSetDoc(userRef, userData, { merge: true })
+          .then(() => console.log('Telegram user saved to Firebase'))
+          .catch(err => console.error('Firebase save error:', err));
+      }
+
+      currentUser = userData;
       saveUser();
       closeLoginModal();
-      showToast('Вітаємо! Ви отримали 50 бонусів! 🎁');
+      showToast('Вітаємо! Ви авторизовані через Telegram! 🎁');
       return;
     }
   }
 
-  // Fallback - open Telegram bot link
-  const botUsername = 'BBUa_BOT'; // Replace with your bot username
+  // Fallback - open Telegram bot link for authorization
+  const botUsername = 'BBUa_BOT';
   window.open(`https://t.me/${botUsername}?start=login`, '_blank');
-  showToast('Перейдіть в Telegram для авторизації', 'info');
+  closeLoginModal();
+  showToast('Перейдіть в Telegram бота для авторизації ✈️', 'info');
 }
 
 async function loginWithGoogle() {

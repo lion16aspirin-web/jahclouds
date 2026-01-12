@@ -5,6 +5,7 @@ import os
 import json
 import logging
 import aiohttp
+from datetime import datetime
 from telegram import (
     Update, 
     LabeledPrice, 
@@ -301,6 +302,48 @@ def back_to_menu_keyboard():
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
+    user_id = user.id
+    
+    # Check for deep link parameters
+    args = context.args
+    if args and args[0].startswith('login'):
+        # Generate login token for website
+        login_token = f"tg_{user_id}_{int(datetime.now().timestamp())}"
+        
+        # Create/update user in Firebase
+        user_data = {
+            'telegramId': user_id,
+            'name': user.first_name + (f" {user.last_name}" if user.last_name else ""),
+            'username': user.username or "",
+            'bonuses': user_bonuses.get(user_id, 50),
+            'createdAt': datetime.now().isoformat()
+        }
+        await create_firebase_user(user_data)
+        
+        await update.message.reply_text(
+            f"✅ *Авторизація успішна!*\n\n"
+            f"👤 {user.first_name}, ви авторизовані.\n\n"
+            f"🔗 Повернітесь на сайт — ви вже увійшли!",
+            parse_mode='Markdown',
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🌐 Відкрити сайт", web_app=WebAppInfo(url=WEBAPP_URL))]
+            ])
+        )
+        return
+    
+    # Initialize user bonuses if new
+    if user_id not in user_bonuses:
+        user_bonuses[user_id] = 50
+        
+        # Register in Firebase
+        user_data = {
+            'telegramId': user_id,
+            'name': user.first_name + (f" {user.last_name}" if user.last_name else ""),
+            'username': user.username or "",
+            'bonuses': 50,
+            'createdAt': datetime.now().isoformat()
+        }
+        await create_firebase_user(user_data)
     
     text = (
         f"☁️ *Вітаємо, {user.first_name}!*\n\n"
