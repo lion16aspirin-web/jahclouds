@@ -1030,15 +1030,34 @@ function initTelegramWebApp() {
 
     // Check if initData exists (Mini App context)
     if (!tg.initData) {
-      console.log('Not in Telegram context');
       return;
     }
 
-    // Debug Alert (remove later)
-    if (tg.initDataUnsafe?.user) {
-      alert("Mini App Auto-Login Started for: " + tg.initDataUnsafe.user.first_name);
-    } else {
-      alert("Mini App: initDataUnsafe.user is missing");
+    // Hide incompatible Login Methods (Google/Email) in Mini App
+    // We only want Silent Auth here.
+    try {
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .social-login, .login-divider, #emailRegisterForm, #loginForm .form-group:not(:last-child) {
+          display: none !important;
+        }
+        .login-subtitle {
+          visibility: hidden;
+          position: relative;
+        }
+        .login-subtitle:after {
+          content: "Авторизація через Telegram...";
+          visibility: visible;
+          position: absolute;
+          left: 0;
+          width: 100%;
+          text-align: center;
+          top: 0;
+        }
+      `;
+      document.head.appendChild(style);
+    } catch (e) {
+      console.warn('Could not inject styles', e);
     }
 
     // Set theme
@@ -1082,10 +1101,8 @@ function initTelegramWebApp() {
               const existing = snap.data();
               userData.bonuses = existing.bonuses;
               userData.orders = existing.orders || [];
-              alert("Synced! Bonuses: " + userData.bonuses);
             } else {
               await window.firestoreSetDoc(userRef, userData, { merge: true });
-              alert("User registered in Cloud");
             }
 
             // Update with real data
@@ -1093,8 +1110,7 @@ function initTelegramWebApp() {
             saveUser();
             updateUserUI();
           } catch (e) {
-            alert("Firebase Error: " + e.message);
-            console.error(e);
+            console.error("Firebase Sync Error:", e);
           }
         } else {
           // Retry if Firebase not ready
