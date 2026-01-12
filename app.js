@@ -648,3 +648,312 @@ window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
 window.updateQuantity = updateQuantity;
 window.openProduct = openProduct;
+
+// ============ USER AUTHENTICATION ============
+let currentUser = JSON.parse(localStorage.getItem('jahcloud_user')) || null;
+
+function initAuth() {
+  // Check age verification
+  if (!localStorage.getItem('ageVerified')) {
+    $('#ageModal').classList.remove('hidden');
+  } else {
+    $('#ageModal').classList.add('hidden');
+  }
+
+  // Age confirm button
+  $('#ageConfirm')?.addEventListener('click', () => {
+    localStorage.setItem('ageVerified', 'true');
+    $('#ageModal').classList.add('hidden');
+  });
+
+  // User button click
+  $('#userBtn')?.addEventListener('click', () => {
+    if (currentUser) {
+      navigateTo('account');
+    } else {
+      openLoginModal();
+    }
+  });
+
+  // Login tabs
+  document.querySelectorAll('.login-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.login-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      $(`#${tab.dataset.tab}Content`).classList.add('active');
+    });
+  });
+
+  updateUserUI();
+}
+
+function openLoginModal() {
+  $('#loginModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLoginModal() {
+  $('#loginModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function loginWithTelegram() {
+  // Telegram Login Widget integration
+  // For Mini App, use Telegram WebApp API
+  if (window.Telegram?.WebApp) {
+    const tgUser = window.Telegram.WebApp.initDataUnsafe?.user;
+    if (tgUser) {
+      currentUser = {
+        id: tgUser.id,
+        name: tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : ''),
+        username: tgUser.username,
+        photo: tgUser.photo_url,
+        provider: 'telegram',
+        bonuses: 50,
+        orders: [],
+        createdAt: new Date().toISOString()
+      };
+      saveUser();
+      closeLoginModal();
+      showToast('Вітаємо! Ви отримали 50 бонусів! 🎁');
+      return;
+    }
+  }
+
+  // Fallback - open Telegram bot link
+  const botUsername = 'JahCloudBot'; // Replace with your bot username
+  window.open(`https://t.me/${botUsername}?start=login`, '_blank');
+  showToast('Перейдіть в Telegram для авторизації', 'info');
+}
+
+function loginWithGoogle() {
+  // Simulated Google login for static site
+  // In production, use Firebase Auth or similar
+  const mockUser = {
+    id: 'google_' + Date.now(),
+    name: 'Google User',
+    email: 'user@gmail.com',
+    provider: 'google',
+    bonuses: 50,
+    orders: [],
+    createdAt: new Date().toISOString()
+  };
+
+  currentUser = mockUser;
+  saveUser();
+  closeLoginModal();
+  showToast('Вітаємо! Ви отримали 50 бонусів! 🎁');
+}
+
+function loginWithEmail(event) {
+  event.preventDefault();
+  const email = $('#loginEmail').value;
+  const password = $('#loginPassword').value;
+
+  // Check stored users
+  const users = JSON.parse(localStorage.getItem('jahcloud_users')) || {};
+  const user = users[email];
+
+  if (user && user.password === password) {
+    currentUser = user;
+    saveUser();
+    closeLoginModal();
+    showToast('Вітаємо назад! 👋');
+  } else {
+    showToast('Невірний email або пароль', 'error');
+  }
+}
+
+function registerWithEmail(event) {
+  event.preventDefault();
+  const name = $('#registerName').value;
+  const email = $('#registerEmail').value;
+  const phone = $('#registerPhone').value;
+  const password = $('#registerPassword').value;
+
+  // Check if user exists
+  const users = JSON.parse(localStorage.getItem('jahcloud_users')) || {};
+  if (users[email]) {
+    showToast('Користувач з таким email вже існує', 'error');
+    return;
+  }
+
+  // Create new user
+  const newUser = {
+    id: 'email_' + Date.now(),
+    name,
+    email,
+    phone,
+    password,
+    provider: 'email',
+    bonuses: 50,
+    orders: [],
+    createdAt: new Date().toISOString()
+  };
+
+  users[email] = newUser;
+  localStorage.setItem('jahcloud_users', JSON.stringify(users));
+
+  currentUser = newUser;
+  saveUser();
+  closeLoginModal();
+  showToast('Реєстрація успішна! +50 бонусів 🎁');
+}
+
+function saveUser() {
+  localStorage.setItem('jahcloud_user', JSON.stringify(currentUser));
+  updateUserUI();
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('jahcloud_user');
+  updateUserUI();
+  navigateTo('home');
+  showToast('Ви вийшли з акаунту');
+}
+
+function updateUserUI() {
+  const userBtn = $('#userBtn');
+  const userName = $('#userName');
+  const userPhone = $('#userPhone');
+  const bonusBalance = $('#bonusBalance');
+  const bonusTotal = $('#bonusTotal');
+
+  if (currentUser) {
+    userBtn?.classList.add('logged-in');
+    if (userName) userName.textContent = currentUser.name;
+    if (userPhone) userPhone.textContent = currentUser.phone || currentUser.email || '';
+    if (bonusBalance) bonusBalance.textContent = currentUser.bonuses || 0;
+    if (bonusTotal) bonusTotal.textContent = currentUser.bonuses || 0;
+
+    // Update bonuses variable
+    bonuses = currentUser.bonuses || 0;
+    localStorage.setItem('bonuses', bonuses);
+  } else {
+    userBtn?.classList.remove('logged-in');
+  }
+}
+
+// ============ TELEGRAM STARS PAYMENT ============
+function payWithTelegramStars() {
+  const total = getCartTotal() - getDiscount();
+  const starsAmount = Math.max(1, Math.ceil(total / 2));
+
+  if (window.Telegram?.WebApp) {
+    // Use Telegram WebApp payment
+    const tg = window.Telegram.WebApp;
+
+    // Prepare order data
+    const orderData = {
+      items: cart,
+      total: total,
+      stars: starsAmount,
+      user: currentUser,
+      timestamp: new Date().toISOString()
+    };
+
+    // Send data to bot
+    tg.sendData(JSON.stringify({
+      action: 'create_order',
+      order: orderData
+    }));
+
+    showToast('Переходимо до оплати...');
+
+    // Close Mini App
+    setTimeout(() => {
+      tg.close();
+    }, 1000);
+  } else {
+    // Fallback - open bot for payment
+    const botUsername = 'JahCloudBot';
+    const items = cart.map(i => `${i.name}x${i.quantity}`).join(',');
+    window.open(`https://t.me/${botUsername}?start=pay_${total}_${encodeURIComponent(items)}`, '_blank');
+    showToast('Перейдіть в Telegram для оплати ⭐');
+  }
+}
+
+// ============ TELEGRAM MINI APP INTEGRATION ============
+function initTelegramWebApp() {
+  if (window.Telegram?.WebApp) {
+    const tg = window.Telegram.WebApp;
+
+    // Expand to full height
+    tg.expand();
+
+    // Set theme
+    if (tg.colorScheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    // Enable closing confirmation
+    tg.enableClosingConfirmation();
+
+    // Auto-login from Telegram
+    const tgUser = tg.initDataUnsafe?.user;
+    if (tgUser && !currentUser) {
+      currentUser = {
+        id: tgUser.id,
+        name: tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : ''),
+        username: tgUser.username,
+        photo: tgUser.photo_url,
+        provider: 'telegram',
+        bonuses: parseInt(localStorage.getItem('bonuses')) || 50,
+        orders: [],
+        createdAt: new Date().toISOString()
+      };
+      saveUser();
+    }
+
+    // Set main button for checkout
+    tg.MainButton.setText('🛒 Оформити замовлення');
+    tg.MainButton.onClick(() => {
+      if (cart.length > 0) {
+        payWithTelegramStars();
+      }
+    });
+
+    // Show/hide main button based on cart
+    updateTelegramMainButton();
+  }
+}
+
+function updateTelegramMainButton() {
+  if (window.Telegram?.WebApp) {
+    const tg = window.Telegram.WebApp;
+    if (cart.length > 0) {
+      const total = getCartTotal() - getDiscount();
+      tg.MainButton.setText(`💳 Оплатити ${total}₴`);
+      tg.MainButton.show();
+    } else {
+      tg.MainButton.hide();
+    }
+  }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+  initAuth();
+  initTelegramWebApp();
+});
+
+// Global functions for HTML onclick
+window.openLoginModal = openLoginModal;
+window.closeLoginModal = closeLoginModal;
+window.loginWithTelegram = loginWithTelegram;
+window.loginWithGoogle = loginWithGoogle;
+window.loginWithEmail = loginWithEmail;
+window.registerWithEmail = registerWithEmail;
+window.logout = logout;
+window.payWithTelegramStars = payWithTelegramStars;
+
+// Update Telegram button when cart changes
+const originalUpdateCartUI = updateCartUI;
+updateCartUI = function () {
+  originalUpdateCartUI();
+  updateTelegramMainButton();
+};
