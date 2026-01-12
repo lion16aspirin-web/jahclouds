@@ -650,20 +650,20 @@ window.updateQuantity = updateQuantity;
 window.openProduct = openProduct;
 
 // ============ USER AUTHENTICATION ============
-let currentUser = JSON.parse(localStorage.getItem('jahcloud_user')) || null;
+let currentUser = null; // Start with null, will be set by Firebase auth state
 
 function initAuth() {
   // Check age verification
   if (!localStorage.getItem('ageVerified')) {
-    $('#ageModal').classList.remove('hidden');
+    $('#ageModal')?.classList.remove('hidden');
   } else {
-    $('#ageModal').classList.add('hidden');
+    $('#ageModal')?.classList.add('hidden');
   }
 
   // Age confirm button
   $('#ageConfirm')?.addEventListener('click', () => {
     localStorage.setItem('ageVerified', 'true');
-    $('#ageModal').classList.add('hidden');
+    $('#ageModal')?.classList.add('hidden');
   });
 
   // User button click
@@ -681,9 +681,53 @@ function initAuth() {
       document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.login-content').forEach(c => c.classList.remove('active'));
       tab.classList.add('active');
-      $(`#${tab.dataset.tab}Content`).classList.add('active');
+      $(`#${tab.dataset.tab}Content`)?.classList.add('active');
     });
   });
+
+  // Listen to Firebase auth state changes
+  setTimeout(() => {
+    if (window.firebaseAuth && window.firebaseOnAuthStateChanged) {
+      window.firebaseOnAuthStateChanged(window.firebaseAuth, async (user) => {
+        if (user) {
+          // User is signed in - get their data from Firestore
+          try {
+            const userRef = window.firestoreDoc(window.firebaseDb, 'users', user.uid);
+            const userSnap = await window.firestoreGetDoc(userRef);
+
+            if (userSnap.exists()) {
+              currentUser = userSnap.data();
+            } else {
+              currentUser = {
+                id: user.uid,
+                name: user.displayName || 'Користувач',
+                email: user.email,
+                photo: user.photoURL,
+                provider: user.providerData[0]?.providerId || 'unknown',
+                bonuses: 0,
+                createdAt: new Date().toISOString()
+              };
+            }
+            localStorage.setItem('jahcloud_user', JSON.stringify(currentUser));
+          } catch (error) {
+            console.error('Error getting user data:', error);
+          }
+        } else {
+          // User is signed out
+          currentUser = null;
+          localStorage.removeItem('jahcloud_user');
+        }
+        updateUserUI();
+      });
+    } else {
+      // Firebase not loaded yet, try localStorage as fallback
+      const savedUser = localStorage.getItem('jahcloud_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+      }
+      updateUserUI();
+    }
+  }, 1000); // Wait for Firebase to initialize
 
   updateUserUI();
 }

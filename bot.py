@@ -4,6 +4,7 @@
 import os
 import json
 import logging
+import aiohttp
 from telegram import (
     Update, 
     LabeledPrice, 
@@ -36,6 +37,11 @@ PROVIDER_TOKEN = ""
 WEBAPP_URL = 'https://lion16aspirin-web.github.io/jahclouds/'
 ADMIN_ID = None  # Set your Telegram ID here
 
+# Firebase Configuration
+FIREBASE_PROJECT_ID = 'jahcloud-9019b'
+FIREBASE_API_KEY = 'AIzaSyCIpiVZTHVtFY9rYVcHlBArfDA34FvjnJw'
+FIRESTORE_URL = f'https://firestore.googleapis.com/v1/projects/{FIREBASE_PROJECT_ID}/databases/(default)/documents'
+
 # ============ DATA ============
 PRODUCTS = [
     {"id": 1, "name": "Purple Haze HHC", "price": 450, "old_price": 550, "category": "fruity", "puffs": 3000, "emoji": "🟣", "desc": "Насичений фруктовий смак з нотками лісових ягід"},
@@ -58,6 +64,112 @@ PROMO_CODES = {
     "WELCOME": {"discount": 50, "type": "fixed"},
     "VIBE20": {"discount": 20, "type": "percent"}
 }
+
+# ============ FIREBASE FUNCTIONS ============
+async def get_firebase_user(telegram_id: int):
+    """Get user from Firebase by Telegram ID"""
+    try:
+        url = f"{FIRESTORE_URL}/users?key={FIREBASE_API_KEY}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    documents = data.get('documents', [])
+                    for doc in documents:
+                        fields = doc.get('fields', {})
+                        if fields.get('telegramId', {}).get('integerValue') == str(telegram_id):
+                            return parse_firestore_doc(fields)
+    except Exception as e:
+        logger.error(f"Firebase get user error: {e}")
+    return None
+
+async def create_firebase_user(user_data: dict):
+    """Create or update user in Firebase"""
+    try:
+        doc_id = f"tg_{user_data['telegramId']}"
+        url = f"{FIRESTORE_URL}/users/{doc_id}?key={FIREBASE_API_KEY}"
+        
+        # Convert to Firestore format
+        firestore_data = {
+            "fields": {
+                "id": {"stringValue": doc_id},
+                "telegramId": {"integerValue": str(user_data['telegramId'])},
+                "name": {"stringValue": user_data.get('name', '')},
+                "username": {"stringValue": user_data.get('username', '')},
+                "provider": {"stringValue": "telegram"},
+                "bonuses": {"integerValue": str(user_data.get('bonuses', 50))},
+                "createdAt": {"stringValue": user_data.get('createdAt', '')},
+                "phone": {"stringValue": user_data.get('phone', '')}
+            }
+        }
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.patch(url, json=firestore_data) as response:
+                if response.status in [200, 201]:
+                    logger.info(f"Firebase user created/updated: {doc_id}")
+                    return True
+                else:
+                    error = await response.text()
+                    logger.error(f"Firebase create user error: {error}")
+    except Exception as e:
+        logger.error(f"Firebase create user error: {e}")
+    return False
+
+async def update_firebase_user_bonuses(telegram_id: int, bonuses: int):
+    """Update user bonuses in Firebase"""
+    try:
+        doc_id = f"tg_{telegram_id}"
+        url = f"{FIRESTORE_URL}/users/{doc_id}?updateMask.fieldPaths=bonuses&key={FIREBASE_API_KEY}"
+        
+        firestore_data = {
+            "fields": {
+                "bonuses": {"integerValue": str(bonuses)}
+            }
+        }
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.patch(url, json=firestore_data) as response:
+                return response.status in [200, 201]
+    except Exception as e:
+        logger.error(f"Firebase update bonuses error: {e}")
+    return False
+
+async def save_order_to_firebase(order_data: dict):
+    """Save order to Firebase"""
+    try:
+        url = f"{FIRESTORE_URL}/orders?key={FIREBASE_API_KEY}"
+        
+        firestore_data = {
+            "fields": {
+                "userId": {"stringValue": f"tg_{order_data['userId']}"},
+                "telegramId": {"integerValue": str(order_data['userId'])},
+                "items": {"stringValue": json.dumps(order_data['items'])},
+                "total": {"integerValue": str(order_data['total'])},
+                "status": {"stringValue": order_data.get('status', 'pending')},
+                "createdAt": {"stringValue": order_data['createdAt']}
+            }
+        }
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=firestore_data) as response:
+                if response.status in [200, 201]:
+                    logger.info(f"Order saved to Firebase")
+                    return True
+    except Exception as e:
+        logger.error(f"Firebase save order error: {e}")
+    return False
+
+def parse_firestore_doc(fields: dict) -> dict:
+    """Parse Firestore document to Python dict"""
+    result = {}
+    for key, value in fields.items():
+        if 'stringValue' in value:
+            result[key] = value['stringValue']
+        elif 'integerValue' in value:
+            result[key] = int(value['integerValue'])
+        elif 'booleanValue' in value:
+            result[key] = value['booleanValue']
+    return result
 
 # ============ USER DATA ============
 user_carts = {}
