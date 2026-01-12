@@ -653,6 +653,12 @@ window.openProduct = openProduct;
 let currentUser = null; // Start with null, will be set by Firebase auth state
 
 function initAuth() {
+  // CRITICAL: Skip standard Auth logic if in Telegram Mini App
+  // Mini App uses its own initTelegramWebApp() logic.
+  if (window.Telegram?.WebApp?.initData) {
+    console.log("Skipping standard initAuth for Mini App");
+    return;
+  }
   // Check age verification
   if (!localStorage.getItem('ageVerified')) {
     $('#ageModal')?.classList.remove('hidden');
