@@ -746,9 +746,12 @@ function closeLoginModal() {
 // We now use onTelegramAuth callback from the widget
 
 async function onTelegramAuth(user) {
+  // Debug alert to confirm widget is firing
+  alert(`DEBUG: Telegram Auth!\nID: ${user?.id}\nName: ${user?.first_name}`);
   console.log('Telegram Auth Callback:', user);
 
   if (!user) {
+    alert("User object is missing!");
     showToast('Помилка авторизації Telegram', 'error');
     return;
   }
