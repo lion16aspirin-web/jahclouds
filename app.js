@@ -742,46 +742,66 @@ function closeLoginModal() {
   document.body.style.overflow = '';
 }
 
-function loginWithTelegram() {
-  // Telegram Login Widget integration
-  // For Mini App, use Telegram WebApp API
-  if (window.Telegram?.WebApp) {
-    const tgUser = window.Telegram.WebApp.initDataUnsafe?.user;
-    if (tgUser) {
-      // Save to Firebase as well
-      const userData = {
-        id: `tg_${tgUser.id}`,
-        telegramId: tgUser.id,
-        name: tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : ''),
-        username: tgUser.username || '',
-        photo: tgUser.photo_url || '',
-        provider: 'telegram',
-        bonuses: 50,
-        orders: [],
-        createdAt: new Date().toISOString()
-      };
+// function loginWithTelegram() no longer needed as primary, but kept as fallback if needed
+// We now use onTelegramAuth callback from the widget
 
-      // Save to Firestore
-      if (window.firebaseDb && window.firestoreDoc && window.firestoreSetDoc) {
-        const userRef = window.firestoreDoc(window.firebaseDb, 'users', `tg_${tgUser.id}`);
-        window.firestoreSetDoc(userRef, userData, { merge: true })
-          .then(() => console.log('Telegram user saved to Firebase'))
-          .catch(err => console.error('Firebase save error:', err));
+async function onTelegramAuth(user) {
+  console.log('Telegram Auth Callback:', user);
+
+  if (!user) {
+    showToast('Помилка авторизації Telegram', 'error');
+    return;
+  }
+
+  const userData = {
+    id: `tg_${user.id}`,
+    telegramId: user.id,
+    name: user.first_name + (user.last_name ? ' ' + user.last_name : ''),
+    username: user.username || '',
+    photo: user.photo_url || '',
+    provider: 'telegram',
+    bonuses: 50, // Default for new users, will be overwritten if exists
+    orders: [],
+    createdAt: new Date().toISOString()
+  };
+
+  // Sync with Firebase
+  if (window.firebaseDb && window.firestoreDoc && window.firestoreSetDoc && window.firestoreGetDoc) {
+    try {
+      const userRef = window.firestoreDoc(window.firebaseDb, 'users', `tg_${user.id}`);
+      const userSnap = await window.firestoreGetDoc(userRef);
+
+      if (userSnap.exists()) {
+        const existingData = userSnap.data();
+        userData.bonuses = existingData.bonuses || 50;
+        userData.orders = existingData.orders || [];
+        // Merge updates
+        await window.firestoreSetDoc(userRef, userData, { merge: true });
+        showToast('Вітаємо назад! 👋');
+      } else {
+        // New user
+        await window.firestoreSetDoc(userRef, userData);
+        showToast('Вітаємо! Ви отримали 50 бонусів! 🎁');
       }
-
-      currentUser = userData;
-      saveUser();
-      closeLoginModal();
-      showToast('Вітаємо! Ви авторизовані через Telegram! 🎁');
-      return;
+    } catch (err) {
+      console.error('Firebase sync error:', err);
+      // Determine if generic error or network
+      showToast('Помилка синхронізації з базою', 'error');
     }
   }
 
-  // Fallback - open Telegram bot link for authorization
-  const botUsername = 'BBUa_BOT';
-  window.open(`https://t.me/${botUsername}?start=login`, '_blank');
+  currentUser = userData;
+  saveUser();
   closeLoginModal();
-  showToast('Перейдіть в Telegram бота для авторизації ✈️', 'info');
+  updateUserUI();
+}
+
+// Make it global for the widget to call
+window.onTelegramAuth = onTelegramAuth;
+
+function loginWithTelegram() {
+  // Legacy fallback or for Mini App specific calls if widget fails
+  showToast('Використовуйте кнопку "Log in with Telegram" вище ☝️', 'info');
 }
 
 async function loginWithGoogle() {
