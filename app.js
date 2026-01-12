@@ -722,7 +722,7 @@ function loginWithTelegram() {
   }
 
   // Fallback - open Telegram bot link
-  const botUsername = 'JahCloudBot'; // Replace with your bot username
+  const botUsername = 'BBUa_BOT'; // Replace with your bot username
   window.open(`https://t.me/${botUsername}?start=login`, '_blank');
   showToast('Перейдіть в Telegram для авторизації', 'info');
 }
@@ -868,7 +868,7 @@ function payWithTelegramStars() {
     }, 1000);
   } else {
     // Fallback - open bot for payment
-    const botUsername = 'JahCloudBot';
+    const botUsername = 'BBUa_BOT';
     const items = cart.map(i => `${i.name}x${i.quantity}`).join(',');
     window.open(`https://t.me/${botUsername}?start=pay_${total}_${encodeURIComponent(items)}`, '_blank');
     showToast('Перейдіть в Telegram для оплати ⭐');
