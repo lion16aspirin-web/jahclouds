@@ -1022,12 +1022,24 @@ function payWithTelegramStars() {
 }
 
 // ============ TELEGRAM MINI APP INTEGRATION ============
+// ============ TELEGRAM MINI APP INTEGRATION ============
 function initTelegramWebApp() {
   if (window.Telegram?.WebApp) {
     const tg = window.Telegram.WebApp;
-
-    // Expand to full height
     tg.expand();
+
+    // Check if initData exists (Mini App context)
+    if (!tg.initData) {
+      console.log('Not in Telegram context');
+      return;
+    }
+
+    // Debug Alert (remove later)
+    if (tg.initDataUnsafe?.user) {
+      alert("Mini App Auto-Login Started for: " + tg.initDataUnsafe.user.first_name);
+    } else {
+      alert("Mini App: initDataUnsafe.user is missing");
+    }
 
     // Set theme
     if (tg.colorScheme === 'dark') {
@@ -1049,38 +1061,48 @@ function initTelegramWebApp() {
         username: tgUser.username || '',
         photo: tgUser.photo_url || '',
         provider: 'telegram',
-        bonuses: parseInt(localStorage.getItem('bonuses')) || 50,
+        bonuses: 50, // Default for new users
         orders: [],
         createdAt: new Date().toISOString()
       };
 
+      // 1. Optimistic login (UI feels instant)
       currentUser = userData;
       saveUser();
-
-      // Save to Firebase
-      if (window.firebaseDb && window.firestoreDoc && window.firestoreSetDoc) {
-        const userRef = window.firestoreDoc(window.firebaseDb, 'users', `tg_${tgUser.id}`);
-        window.firestoreSetDoc(userRef, userData, { merge: true })
-          .then(() => {
-            console.log('Telegram user synced with Firebase');
-            // Show welcome if first time
-            if (!localStorage.getItem('tg_welcomed')) {
-              localStorage.setItem('tg_welcomed', 'true');
-              showToast(`Вітаємо, ${tgUser.first_name}! 🎉`);
-            }
-          })
-          .catch(err => console.error('Firebase sync error:', err));
-      } else {
-        // Firebase not ready yet, try again
-        setTimeout(() => {
-          if (window.firebaseDb) {
-            const userRef = window.firestoreDoc(window.firebaseDb, 'users', `tg_${tgUser.id}`);
-            window.firestoreSetDoc(userRef, userData, { merge: true });
-          }
-        }, 2000);
-      }
-
       updateUserUI();
+
+      // 2. Sync with Firebase (Async)
+      const syncFirebase = async () => {
+        if (window.firebaseDb && window.firestoreDoc && window.firestoreSetDoc && window.firestoreGetDoc) {
+          try {
+            const userRef = window.firestoreDoc(window.firebaseDb, 'users', `tg_${tgUser.id}`);
+            const snap = await window.firestoreGetDoc(userRef);
+
+            if (snap.exists()) {
+              const existing = snap.data();
+              userData.bonuses = existing.bonuses;
+              userData.orders = existing.orders || [];
+              alert("Synced! Bonuses: " + userData.bonuses);
+            } else {
+              await window.firestoreSetDoc(userRef, userData, { merge: true });
+              alert("User registered in Cloud");
+            }
+
+            // Update with real data
+            currentUser = userData;
+            saveUser();
+            updateUserUI();
+          } catch (e) {
+            alert("Firebase Error: " + e.message);
+            console.error(e);
+          }
+        } else {
+          // Retry if Firebase not ready
+          setTimeout(syncFirebase, 1500);
+        }
+      };
+
+      syncFirebase();
     }
 
     // Set main button for checkout
